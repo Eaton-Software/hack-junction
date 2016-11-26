@@ -1,0 +1,3 @@
+[submodule "qtapp/cpr"]
+	path = qtapp/cpr
+	url = git@github.com:whoshuu/cpr.git

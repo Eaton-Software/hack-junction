@@ -16,14 +16,14 @@ SOURCES += main.cpp\
         mainwindow.cpp
 
 HEADERS  += mainwindow.h \
-    conversion.hpp \
-    imagelabel.hpp
+    conversion.hpp
 
 FORMS    += mainwindow.ui
 
 CONFIG += link_pkgconfig
 
-PKGCONFIG += opencv
+PKGCONFIG += opencv libcurl
 
-RESOURCES += \
-    images.qrc
+INCLUDEPATH += cpr/include/cpr
+
+SUBDIRS += cpr

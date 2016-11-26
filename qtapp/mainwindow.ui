@@ -91,7 +91,7 @@
              <item row="3" column="0">
               <widget class="QPushButton" name="pushButton_4">
                <property name="text">
-                <string>PushButton</string>
+                <string>Begin Stream</string>
                </property>
               </widget>
              </item>
@@ -118,8 +118,6 @@
           <property name="title">
            <string>GroupBox</string>
           </property>
-          <zorder>groupBox</zorder>
-          <zorder>groupBox</zorder>
          </widget>
         </item>
        </layout>
