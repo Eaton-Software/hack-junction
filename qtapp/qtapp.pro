@@ -17,7 +17,6 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     conversion.hpp \
-    expandpath.hpp \
     imagelabel.hpp
 
 FORMS    += mainwindow.ui
