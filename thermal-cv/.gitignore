@@ -1,8 +1,0 @@
-#   Directories
-build/
-
-#   File types
-*.csv
-
-#   Other
-driver
