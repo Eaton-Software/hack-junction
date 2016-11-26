@@ -12,7 +12,11 @@ int main(int argc, char **argv) {
 
     std::vector<std::string> image_names {
         // Image paths
-        "./img/pigs.bmp"
+        "./img/pigs.bmp",
+        "./img/ir_people_0.tif",
+        "./img/ir_people_1_close.tif",
+        "./img/ir_people_1_far.tif",
+        "./img/ir_people_2.tif",
     };
 
     std::vector<std::vector<cv::Mat> > images;
@@ -32,7 +36,11 @@ int main(int argc, char **argv) {
 
     std::vector<std::string> window_names {
         // Window names
-        "Pigs"
+        "Pigs",
+        "No people",
+        "One person, close",
+        "One person, far",
+        "Two people",
     };
 
     for(int i = 0; i < window_names.size(); i++) {
