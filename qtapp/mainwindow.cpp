@@ -53,12 +53,23 @@ void MainWindow::update_picbox() {
   std::vector<byte> vectordata{bstring.begin(), bstring.end()};
   cv::Mat data_mat(vectordata, true);
   cv::Mat image(cv::imdecode(data_mat, cv::IMREAD_GRAYSCALE));
-  QImage qim1 = QImage((uchar *)image.data, image.cols, image.rows, image.step,
+  cv::Mat processed;
+  processed = proc_image(image);
+  QImage qim1 = QImage((uchar *)processed.data, processed.cols, processed.rows, processed.step,
                        QImage::Format_Grayscale8);
   picbox->setScaledContents(true);
   picbox->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
   picbox->setPixmap(QPixmap::fromImage(qim1));
   picbox->update();
+}
+
+cv::Mat MainWindow::proc_image(cv::Mat src) {
+  cv::Mat gray_cont, bin, dst;
+
+  src.convertTo(gray_cont, -1, 2, 1);
+  cv::threshold(gray_cont, bin, 128, 255, 3);
+  cv::medianBlur(bin, dst, 3);
+  return dst;
 }
 
 void MainWindow::on_checkBox_4_toggled(bool checked) {

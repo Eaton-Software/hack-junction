@@ -28,6 +28,7 @@ class MainWindow : public QMainWindow {
  private:
   Ui::MainWindow *ui;
   cv::Mat cvimage;
+  cv::Mat proc_image(cv::Mat src);
   QTimer *streamTimer;
 };
 
