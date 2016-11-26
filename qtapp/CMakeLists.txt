@@ -49,6 +49,11 @@ target_link_libraries(qtapp Qt5::Widgets)
 
 find_package(Qt5Core)
 
+set(BUILD_CPR_TESTS OFF CACHE BOOL "Don't build cpr tests")
+find_package(CURL)
+if(CURL_FOUND)
+    set(USE_SYSTEM_CURL ON CACHE BOOL "Use the system curl for faster builds")
+endif()
 add_subdirectory(cpr)
 
 target_link_libraries(qtapp ${CPR_LIBRARIES} ${OpenCV_LIBS})
