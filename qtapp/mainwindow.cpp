@@ -57,11 +57,10 @@ void MainWindow::update_picbox() {
   picbox->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
   picbox->setPixmap(QPixmap::fromImage(qim1));
   picbox->update();
-  std::this_thread::sleep_for(std::chrono::milliseconds(125));
 }
 
 void MainWindow::on_pushButton_4_clicked() {
   QTimer *timer = new QTimer(this);
   connect(timer, SIGNAL(timeout()), this, SLOT(update_picbox()));
-  timer->start(4);
+  timer->start(40);
 }
