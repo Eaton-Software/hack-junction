@@ -49,8 +49,10 @@ int main(int argc, char **argv) {
   cv::VideoCapture cap(0); // open the default camera
   if(!cap.isOpened())  // check if we succeeded
     return -1;
-  cv::Mat frame;
+  cv::Mat frame_raw;
+  cv::Mat frame_edit;
   cv::namedWindow("Webcam", CV_WINDOW_NORMAL);
+  cv::namedWindow("Processed Video", CV_WINDOW_NORMAL);
 
   // Control Panel Setup
   cv::namedWindow("Control", CV_WINDOW_NORMAL); // create a window called "Control"
@@ -61,6 +63,7 @@ int main(int argc, char **argv) {
   int iLowV = 180;
   int iHighV = 226;
   int iStrel = 5;
+  int iThrsh = 30;
   cvCreateTrackbar("LowH", "Control", &iLowH, 179); // Hue (0 - 179)
   cvCreateTrackbar("HighH", "Control", &iHighH, 179);
   cvCreateTrackbar("LowS", "Control", &iLowS, 255); // Saturation (0 - 255)
@@ -68,6 +71,7 @@ int main(int argc, char **argv) {
   cvCreateTrackbar("LowV", "Control", &iLowV, 255); // Value (0 - 255)
   cvCreateTrackbar("HighV", "Control", &iHighV, 255);
   cvCreateTrackbar("Strel Size", "Control", &iStrel, 30);
+  cvCreateTrackbar("Red Threshold", "Control", &iThrsh, 255);
 
   bool run = true;
   while (run) {
@@ -76,8 +80,29 @@ int main(int argc, char **argv) {
     }
 
     // Read a frame and show it
-    cap >> frame;
-    cv::imshow("Webcam", frame);
+    cap >> frame_raw;
+    frame_edit = frame_raw.clone();
+    int thrsh = cv::getTrackbarPos("Red Threshold", "Control");
+    for (int y = 0; y < frame_edit.rows; y++) {
+      for (int x = 0; x < frame_edit.cols; x++) {
+        cv::Vec3b px = frame_edit.at<cv::Vec3b>(y,x);
+        int max = (px[0] < px[1]) ? px[1] : px[0];
+        max = (max < px[2]) ? px[2] : max;
+        if(max < thrsh) {
+            px[2] = thrsh;
+            frame_edit.at<cv::Vec3b>(y,x) = px;
+        }
+      }
+    }
+    cv::cvtColor(frame_edit, frame_edit, cv::COLOR_BGR2HSV);
+    //cv::inRange(
+    //  frame_edit,
+    //  cv::Scalar(iLowH, iLowS, iLowV),
+    //  cv::Scalar(iHighH, iHighS, iHighV), 
+    //  frame_edit
+    //);
+    cv::imshow("Webcam", frame_raw);
+    cv::imshow("Processed Video", frame_edit);
 
     char c = cvWaitKey(20);
     switch (c) {
