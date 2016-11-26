@@ -1,5 +1,5 @@
 LIB_PATHS=-L/usr/local/lib
-LIBS=-lopencv_highgui -lopencv_core -lopencv_imgcodecs -lopencv_imgproc -lm
+LIBS=-lopencv_highgui -lopencv_core -lopencv_imgcodecs -lopencv_imgproc -lm -lopencv_videoio
 # CC := g++
 CC := clang++ # and comment out the linker last line for sanity
 SRCDIR := src

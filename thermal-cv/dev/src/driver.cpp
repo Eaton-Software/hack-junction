@@ -4,6 +4,7 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/videoio.hpp>
 
 #include "driver.hpp"
 
@@ -12,9 +13,11 @@ const std::string GUI_NAME = "Thermal Imaging";
 int main(int argc, char **argv) {
 
   std::vector<std::string> image_names{
-      // Image paths
-      "./img/ir_people_0.tif", "./img/ir_people_1_close.tif",
-      "./img/ir_people_1_far.tif", "./img/ir_people_2.tif",
+    // Image paths
+    "./img/ir_people_0.tif", 
+    "./img/ir_people_1_close.tif",
+    "./img/ir_people_1_far.tif", 
+    "./img/ir_people_2.tif",
   };
 
   std::vector<std::vector<cv::Mat>> images;
@@ -30,14 +33,24 @@ int main(int argc, char **argv) {
   }
 
   std::vector<std::string> window_names{
-      // Window names
-      "No people", "One person, close", "One person, far", "Two people",
+    // Window names
+    "No people", 
+    "One person, close", 
+    "One person, far", 
+    "Two people",
   };
 
   for (int i = 0; i < window_names.size(); i++) {
     std::cout << "Creating window " << window_names[i] << "...\n";
     cv::namedWindow(window_names[i], cv::WINDOW_NORMAL);
   }
+
+  // Webcam
+  cv::VideoCapture cap(0); // open the default camera
+  if(!cap.isOpened())  // check if we succeeded
+    return -1;
+  cv::Mat frame;
+  cv::namedWindow("Webcam", CV_WINDOW_NORMAL);
 
   // Control Panel Setup
   cv::namedWindow("Control", CV_WINDOW_NORMAL); // create a window called "Control"
@@ -61,74 +74,78 @@ int main(int argc, char **argv) {
     for (int i = 0; i < window_names.size(); i++) {
       cv::imshow(window_names[i], images[i][1]);
     }
+
+    // Read a frame and show it
+    cap >> frame;
+    cv::imshow("Webcam", frame);
+
     char c = cvWaitKey(20);
-    std::vector<int> log_mask;
     switch (c) {
-    case 27: // Escape
-      run = false;
-      break;
-    case ' ': // Revert to original
-      for (auto &img : images)
-        img[1] = img[0].clone();
-      break;
-    case 'H': // RGB to HSV
-      for (auto &img : images)
-        cv::cvtColor(img[1], img[1], cv::COLOR_BGR2HSV);
-      break;
-    case 'G': // RGB to Grayscale
-      for (auto &img : images)
-        cv::cvtColor(img[1], img[1], cv::COLOR_BGR2GRAY);
-      break;
-    case 'B': // Grayscale to Binary
-      for (auto &img : images)
-        cv::threshold(img[1], img[1], 128.0, 255.0, cv::THRESH_BINARY);
-      break;
-    case 'M': // Meanshift thresholding
-      for (auto &img : images)
-        cv::pyrMeanShiftFiltering(img[1], img[1], 20, 45, 3);
-      break;
-    case 'r': // Red detection
-      for (auto &img : images)
-        cv::inRange(img[1], cv::Scalar(0, 100, 100), cv::Scalar(10, 255, 255),
-                    img[1]);
-      break;
-    case 'R': // Red detection
-      for (auto &img : images)
-        cv::inRange(img[1], cv::Scalar(160, 100, 100),
-                    cv::Scalar(179, 255, 255), img[1]);
-      break;
-    case 't': // thresholding
-      for (auto &img : images)
-        cv::inRange(
-            img[1], 
-            cv::Scalar(iLowH, iLowS, iLowV),
-            cv::Scalar(iHighH, iHighS, iHighV), img[1]
-        );
-      break;
-    case 'd': // Dilate
-      for (auto &img : images) {
-        cv::dilate(
-            img[1], img[1], cv::getStructuringElement(
-                cv::MORPH_ELLIPSE, cv::Size(
-                    cv::getTrackbarPos("Strel Size", "Control"),
-                    cv::getTrackbarPos("Strel Size", "Control")
-                )
-            )
-        );
-      }
-      break;
-    case 'e': // Erode
-      for (auto &img : images) {
-        cv::erode(
-            img[1], img[1], cv::getStructuringElement(
-                cv::MORPH_ELLIPSE, cv::Size(
-                    cv::getTrackbarPos("Strel Size", "Control"),
-                    cv::getTrackbarPos("Strel Size", "Control")
-                )
-            )
-        );
-      }
-      break;
+      case 27: // Escape
+        run = false;
+        break;
+      case ' ': // Revert to original
+        for (auto &img : images)
+          img[1] = img[0].clone();
+        break;
+      case 'H': // RGB to HSV
+        for (auto &img : images)
+          cv::cvtColor(img[1], img[1], cv::COLOR_BGR2HSV);
+        break;
+      case 'G': // RGB to Grayscale
+        for (auto &img : images)
+          cv::cvtColor(img[1], img[1], cv::COLOR_BGR2GRAY);
+        break;
+      case 'B': // Grayscale to Binary
+        for (auto &img : images)
+          cv::threshold(img[1], img[1], 128.0, 255.0, cv::THRESH_BINARY);
+        break;
+      case 'M': // Meanshift thresholding
+        for (auto &img : images)
+          cv::pyrMeanShiftFiltering(img[1], img[1], 20, 45, 3);
+        break;
+      case 'r': // Red detection
+        for (auto &img : images)
+          cv::inRange(img[1], cv::Scalar(0, 100, 100), cv::Scalar(10, 255, 255),
+                      img[1]);
+        break;
+      case 'R': // Red detection
+        for (auto &img : images)
+          cv::inRange(img[1], cv::Scalar(160, 100, 100),
+                      cv::Scalar(179, 255, 255), img[1]);
+        break;
+      case 't': // thresholding
+        for (auto &img : images)
+          cv::inRange(
+              img[1],
+              cv::Scalar(iLowH, iLowS, iLowV),
+              cv::Scalar(iHighH, iHighS, iHighV), img[1]
+          );
+        break;
+      case 'd': // Dilate
+        for (auto &img : images) {
+          cv::dilate(
+              img[1], img[1], cv::getStructuringElement(
+                  cv::MORPH_ELLIPSE, cv::Size(
+                      cv::getTrackbarPos("Strel Size", "Control"),
+                      cv::getTrackbarPos("Strel Size", "Control")
+                  )
+              )
+          );
+        }
+        break;
+      case 'e': // Erode
+        for (auto &img : images) {
+          cv::erode(
+              img[1], img[1], cv::getStructuringElement(
+                  cv::MORPH_ELLIPSE, cv::Size(
+                      cv::getTrackbarPos("Strel Size", "Control"),
+                      cv::getTrackbarPos("Strel Size", "Control")
+                  )
+              )
+          );
+        }
+        break;
     }
   }
   cv::destroyAllWindows();
