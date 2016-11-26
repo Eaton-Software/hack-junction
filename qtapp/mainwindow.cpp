@@ -15,7 +15,9 @@
 using byte = unsigned char;
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow) {
+    : QMainWindow(parent),
+      ui(new Ui::MainWindow),
+      streamTimer(new QTimer(this)) {
   ui->setupUi(this);
 }
 
@@ -59,8 +61,11 @@ void MainWindow::update_picbox() {
   picbox->update();
 }
 
-void MainWindow::on_pushButton_4_clicked() {
-  QTimer *timer = new QTimer(this);
-  connect(timer, SIGNAL(timeout()), this, SLOT(update_picbox()));
-  timer->start(40);
+void MainWindow::on_checkBox_4_toggled(bool checked) {
+  if (checked) {
+    connect(streamTimer, SIGNAL(timeout()), this, SLOT(update_picbox()));
+    streamTimer->start(40);
+  } else {
+    streamTimer->stop();
+  }
 }

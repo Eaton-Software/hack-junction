@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTimer>
 #include <opencv2/core/core.hpp>
 
 namespace Ui {
@@ -20,13 +21,14 @@ class MainWindow : public QMainWindow {
 
   void on_pushButton_clicked();
 
-  void on_pushButton_4_clicked();
-
   void update_picbox();
+
+  void on_checkBox_4_toggled(bool checked);
 
  private:
   Ui::MainWindow *ui;
   cv::Mat cvimage;
+  QTimer *streamTimer;
 };
 
 #endif  // MAINWINDOW_H
