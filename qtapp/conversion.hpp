@@ -16,6 +16,7 @@ QImage Mat2QImage(cv::Mat const& src) {
   dest.bits();  // enforce deep copy, see documentation
   // of QImage::QImage ( const uchar * data, int width, int height, Format
   // format )
+  temp.release();
   return dest;
 }
 
