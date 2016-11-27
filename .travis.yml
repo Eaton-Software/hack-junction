@@ -7,7 +7,6 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - canonical-qt5-edgers/ubuntu1204-qt5
           packages:
             - g++-4.9
       env: COMPILER=g++-4.9
@@ -16,7 +15,6 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - canonical-qt5-edgers/ubuntu1204-qt5
           packages:
             - g++-5
       env: COMPILER=g++-5
@@ -26,7 +24,6 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.6
-            - canonical-qt5-edgers/ubuntu1204-qt5
           packages:
             - clang-3.6
       env: COMPILER=clang++-3.6
@@ -36,12 +33,12 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.7
-            - canonical-qt5-edgers/ubuntu1204-qt5
           packages:
             - clang-3.7
       env: COMPILER=clang++-3.7
 
 before_install:
+  - sudo apt-add-repository ppa:canonical-qt5-edgers/ubuntu1204-qt5
   - sudo apt-get update -qq
   - sudo apt-get install -y libopencv-dev qtdeclarative5-dev
 script:
