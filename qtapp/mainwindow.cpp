@@ -45,7 +45,7 @@ void MainWindow::on_pushButton_clicked() {
 void MainWindow::update_picbox() {
   auto picbox = ui->picbox;
   const std::string videoStreamAddress =
-      "http://85.188.8.43:8000/thermaldata_stream.png";
+      "http://85.188.8.43:8080/thermaldata_stream.png";
   auto r = cpr::Get(cpr::Url{videoStreamAddress});
   if (r.status_code != 200) return;
   auto bstring = r.text;
@@ -64,12 +64,20 @@ void MainWindow::update_picbox() {
 }
 
 cv::Mat MainWindow::proc_image(cv::Mat src) {
-  cv::Mat gray_cont, bin, dst;
+  cv::Mat cont, blur, dst;
 
-  src.convertTo(gray_cont, -1, 2, 1);
-  cv::threshold(gray_cont, bin, 128, 255, 3);
-  cv::medianBlur(bin, dst, 3);
-  return dst;
+  // Contrast
+  src.convertTo(src, -1, 2, 1);
+
+  // Blur
+  int blurScale = ui->blurSlider->value() * 2 - 1; // Only odd vals
+  cv::medianBlur(src, src, blurScale);
+
+  // Threshold
+  int thresh = ui->thresholdSlider->value();
+  cv::threshold(src, src, thresh, 255, 3);
+
+  return src;
 }
 
 void MainWindow::on_checkBox_4_toggled(bool checked) {
