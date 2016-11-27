@@ -5,8 +5,12 @@
 
 QImage Mat2QImage(cv::Mat const& src) {
   cv::Mat temp;  // make the same cv::Mat
-  cv::cvtColor(src, temp,
-               CV_BGR2RGB);  // cvtColor Makes a copt, that what i need
+  if (src.channels()==3) {
+    cv::cvtColor(src, temp,
+                 CV_BGR2RGB);  // cvtColor Makes a copt, that what i need
+  } else {
+    cv::cvtColor(src, temp, CV_GRAY2RGB);
+  }
   QImage dest((const uchar*)temp.data, temp.cols, temp.rows, temp.step,
               QImage::Format_RGB888);
   dest.bits();  // enforce deep copy, see documentation
