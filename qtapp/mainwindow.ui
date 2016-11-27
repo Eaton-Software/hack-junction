@@ -113,11 +113,22 @@
             </widget>
            </item>
            <item row="3" column="0">
-            <widget class="QPushButton" name="loadLocal">
-             <property name="text">
-              <string>Select Local Image</string>
-             </property>
-            </widget>
+            <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <item>
+              <widget class="QToolButton" name="loadLocal">
+               <property name="text">
+                <string>Select Local Image</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="resetImage">
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </widget>
@@ -156,6 +167,9 @@
                  <property name="singleStep">
                   <number>1</number>
                  </property>
+                 <property name="value">
+                  <number>5</number>
+                 </property>
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -179,6 +193,9 @@
                <property name="maximum">
                 <number>255</number>
                </property>
+               <property name="value">
+                <number>127</number>
+               </property>
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -197,6 +214,15 @@
              </item>
              <item>
               <widget class="QSlider" name="contrastSlider">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>100</number>
+               </property>
+               <property name="value">
+                <number>50</number>
+               </property>
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -276,11 +302,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>395</x>
-     <y>106</y>
+     <y>100</y>
     </hint>
     <hint type="destinationlabel">
-     <x>451</x>
-     <y>229</y>
+     <x>424</x>
+     <y>216</y>
     </hint>
    </hints>
   </connection>
