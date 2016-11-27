@@ -41,22 +41,15 @@
          </sizepolicy>
         </property>
         <property name="title">
-         <string>GroupBox</string>
+         <string/>
         </property>
         <layout class="QGridLayout" name="gridLayout">
          <item row="0" column="0">
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <widget class="QPushButton" name="pushButton_2">
-             <property name="text">
-              <string>Load image</string>
-             </property>
-            </widget>
-           </item>
-           <item>
             <widget class="QLabel" name="picbox">
              <property name="text">
-              <string>Press load image</string>
+              <string>Load local image, or URL</string>
              </property>
             </widget>
            </item>
@@ -76,39 +69,61 @@
            </sizepolicy>
           </property>
           <property name="title">
-           <string>GroupBox</string>
+           <string>Source</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
-           <item row="0" column="0">
-            <layout class="QGridLayout" name="gridLayout_2">
-             <item row="0" column="0">
-              <widget class="QPushButton" name="pushButton_3">
-               <property name="text">
-                <string>clickme</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QPushButton" name="pushButton">
-               <property name="text">
-                <string>Apply</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0">
-              <widget class="QCheckBox" name="checkBox_4">
+           <item row="1" column="0">
+            <layout class="QHBoxLayout" name="horizontalLayout_8">
+             <item>
+              <widget class="QCheckBox" name="stream">
                <property name="text">
                 <string>Live Stream</string>
                </property>
               </widget>
              </item>
+             <item>
+              <widget class="QToolButton" name="applyURL">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Apply URL</string>
+               </property>
+              </widget>
+             </item>
             </layout>
+           </item>
+           <item row="2" column="0">
+            <widget class="QGroupBox" name="urlBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_5">
+              <item>
+               <widget class="QLabel" name="urlLabel">
+                <property name="text">
+                 <string>URL</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="url"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QPushButton" name="loadLocal">
+             <property name="text">
+              <string>Select Local Image</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="groupBox_3">
+         <widget class="QGroupBox" name="parameters">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -119,33 +134,12 @@
            <string>Parameters</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_4">
-           <item row="0" column="0">
+           <item row="1" column="0">
             <layout class="QVBoxLayout" name="verticalLayout_3">
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_4">
-               <item>
-                <widget class="QLabel" name="label">
-                 <property name="text">
-                  <string>Threshold</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QSlider" name="thresholdSlider">
-                 <property name="maximum">
-                  <number>255</number>
-                 </property>
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_3">
                <item>
-                <widget class="QLabel" name="label_2">
+                <widget class="QLabel" name="blurLabel">
                  <property name="text">
                   <string>Blur</string>
                  </property>
@@ -157,10 +151,10 @@
                   <number>1</number>
                  </property>
                  <property name="maximum">
-                  <number>15</number>
+                  <number>10</number>
                  </property>
                  <property name="singleStep">
-                  <number>2</number>
+                  <number>1</number>
                  </property>
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
@@ -168,6 +162,45 @@
                 </widget>
                </item>
               </layout>
+             </item>
+            </layout>
+           </item>
+           <item row="2" column="0">
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <item>
+              <widget class="QLabel" name="thresholdLabel">
+               <property name="text">
+                <string>Threshold</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSlider" name="thresholdSlider">
+               <property name="maximum">
+                <number>255</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="0" column="0">
+            <layout class="QHBoxLayout" name="horizontalLayout_7">
+             <item>
+              <widget class="QLabel" name="label_4">
+               <property name="text">
+                <string>Contrast</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSlider" name="contrastSlider">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -202,5 +235,54 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>stream</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>urlBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>451</x>
+     <y>87</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>451</x>
+     <y>174</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>stream</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>applyURL</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>395</x>
+     <y>114</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>527</x>
+     <y>114</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>stream</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>loadLocal</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>395</x>
+     <y>106</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>451</x>
+     <y>229</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

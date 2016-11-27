@@ -3,6 +3,7 @@
 #include <QFileDialog>
 #include <QString>
 #include <QTimer>
+#include <QMessageBox>
 #include <chrono>
 #include <cstdlib>
 #include <iostream>
@@ -19,11 +20,13 @@ MainWindow::MainWindow(QWidget *parent)
       ui(new Ui::MainWindow),
       streamTimer(new QTimer(this)) {
   ui->setupUi(this);
+  videoStreamAddress = "";
+  streaming = false;
 }
 
 MainWindow::~MainWindow() { delete ui; }
 
-void MainWindow::on_pushButton_2_clicked() {
+void MainWindow::on_loadLocal_clicked() {
   QString fileName = QFileDialog::getOpenFileName(
       this, tr("Open Image"), QDir::home().absolutePath(), tr("*.png *.jpg"),
       Q_NULLPTR, QFileDialog::Options(QFileDialog::DontUseNativeDialog));
@@ -38,14 +41,8 @@ void MainWindow::on_pushButton_2_clicked() {
   picbox->setPixmap(QPixmap::fromImage(qim1));
 }
 
-void MainWindow::on_pushButton_clicked() {
-  if (cvimage.empty()) return;
-}
-
 void MainWindow::update_picbox() {
   auto picbox = ui->picbox;
-  const std::string videoStreamAddress =
-      "http://85.188.8.43:8080/thermaldata_stream.png";
   auto r = cpr::Get(cpr::Url{videoStreamAddress});
   if (r.status_code != 200) return;
   auto bstring = r.text;
@@ -80,11 +77,26 @@ cv::Mat MainWindow::proc_image(cv::Mat src) {
   return src;
 }
 
-void MainWindow::on_checkBox_4_toggled(bool checked) {
-  if (checked) {
+void MainWindow::on_applyURL_clicked() {
+  videoStreamAddress = ui->url->text().toStdString();
+  auto r = cpr::Get(cpr::Url{videoStreamAddress});
+  if (r.status_code != 200) {
+    QMessageBox error;
+    error.setText("Check the URL");
+    error.exec();
+    return;
+  }
+  if (!streaming) {
+    streaming = true;
     connect(streamTimer, SIGNAL(timeout()), this, SLOT(update_picbox()));
     streamTimer->start(40);
-  } else {
+  }
+}
+
+void MainWindow::on_stream_toggled(bool checked) {
+  std::cout << streaming << std::endl;
+  if (!checked) {
     streamTimer->stop();
+    streaming = false;
   }
 }

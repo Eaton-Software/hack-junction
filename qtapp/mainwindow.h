@@ -17,19 +17,21 @@ class MainWindow : public QMainWindow {
   ~MainWindow();
 
  private slots:
-  void on_pushButton_2_clicked();
-
-  void on_pushButton_clicked();
+  void on_loadLocal_clicked();
 
   void update_picbox();
 
-  void on_checkBox_4_toggled(bool checked);
+  void on_stream_toggled(bool checked);
+
+  void on_applyURL_clicked();
 
  private:
   Ui::MainWindow *ui;
   cv::Mat cvimage;
   cv::Mat proc_image(cv::Mat src);
   QTimer *streamTimer;
+  bool streaming;
+  std::string videoStreamAddress;
 };
 
 #endif  // MAINWINDOW_H
