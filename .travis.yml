@@ -1,7 +1,9 @@
 dist: precise
 language: cpp
 addons:
-  - ppa:canonical-qt5-edgers/ubuntu1204-qt5
+  apt:
+    sources:
+      - ppa:canonical-qt5-edgers/ubuntu1204-qt5
 
 matrix:
   include:
