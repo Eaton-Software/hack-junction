@@ -39,6 +39,10 @@ set(CMAKE_AUTOUIC ON)
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+if($ENV{USER} STREQUAL "nik")
+set(OpenCV_DIR ~/opencv/build)
+endif()
+
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Gui REQUIRED)
 find_package(Qt5Widgets REQUIRED)
