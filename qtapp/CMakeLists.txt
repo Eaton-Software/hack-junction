@@ -30,15 +30,6 @@ else()
     endif()
 endif()
 
-
-# Instruct CMake to run moc automatically when needed.
-set(CMAKE_AUTOMOC ON)
-
-set(CMAKE_AUTOUIC ON)
-
-# Find includes in corresponding build directories
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
 if($ENV{USER} STREQUAL "nik")
 set(OpenCV_DIR ~/opencv/build)
 endif()
@@ -48,6 +39,15 @@ find_package(Qt5Gui REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(CURL)
+
+
+# Instruct CMake to run moc automatically when needed.
+set(CMAKE_AUTOMOC ON)
+
+set(CMAKE_AUTOUIC ON)
+
+# Find includes in corresponding build directories
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 add_executable(qtapp main.cpp mainwindow.cpp expandpath.cpp)
 target_link_libraries(qtapp Qt5::Widgets)
